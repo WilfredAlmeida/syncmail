@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:syncloop/screens/emailDetails.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -228,55 +229,69 @@ class GeneratedEmailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.blueAccent.withOpacity(0.6),
-      child: Container(
-        width: 300,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              subject,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                overflow: TextOverflow.visible,
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailDetailScreen(
+              subject: subject,
+              keywords: keywords,
+              result: generatedEmail,
             ),
-            const SizedBox(height: 40),
-            Expanded(
-              child: Text(
-                keywords,
+          ),
+        );
+      },
+      child: Card(
+        color: Colors.blueAccent.withOpacity(0.6),
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                subject,
                 style: const TextStyle(
-                  fontSize: 12,
-                  overflow: TextOverflow.visible,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  overflow: TextOverflow.visible,
                 ),
               ),
-            ),
-            Row(
-              children: const [
-                Icon(
-                  Icons.info_outline,
-                  size: 15,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 2),
-                Text(
-                  "Click to view",
-                  style: TextStyle(
-                    fontSize: 10,
+              const SizedBox(height: 40),
+              Expanded(
+                child: Text(
+                  keywords,
+                  style: const TextStyle(
+                    fontSize: 12,
                     overflow: TextOverflow.visible,
-                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              Row(
+                children: const [
+                  Icon(
+                    Icons.info_outline,
+                    size: 15,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 2),
+                  Text(
+                    "Click to view",
+                    style: TextStyle(
+                      fontSize: 10,
+                      overflow: TextOverflow.visible,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

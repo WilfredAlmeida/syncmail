@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncloop/screens/dashboard.dart';
 import 'package:syncloop/screens/signup.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SignUpScreen(),
+      home: DashboardScreen(),
     );
   }
 }

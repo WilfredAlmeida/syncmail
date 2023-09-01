@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     print(responseParsed["id"]);
 
                                     final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    prefs.setInt("userId", responseParsed["keys"][0]);
+                                    prefs.setInt("userId", responseParsed["id"]);
 
                                     setState(() {
                                       _isLoading = false;

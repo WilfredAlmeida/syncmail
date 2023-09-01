@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/utils.dart';
 import 'emailDetails.dart';
@@ -134,7 +135,11 @@ class _EmailComposeScreenState extends State<EmailComposeScreen> {
                           });
 
                           if (_formKey.currentState!.validate()) {
-                            var headers = {'userId': '1', 'Content-Type': 'application/json', 'Authorization': "Bearer $API_TOKEN"};
+                            final SharedPreferences prefs = await SharedPreferences.getInstance();
+                            final userId = prefs.getInt("userId");
+
+                            var headers = {'userId': "${userId!}", 'Content-Type': 'application/json', 'Authorization': "Bearer $API_TOKEN"};
+
                             var request = http.Request(
                               'POST',
                               Uri.parse(

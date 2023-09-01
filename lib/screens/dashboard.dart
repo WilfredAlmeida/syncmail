@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:syncloop/screens/emailCompose.dart';
 import 'package:syncloop/screens/emailDetails.dart';
+import 'package:syncloop/utils/utils.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -18,14 +20,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.prompts.getPrompts.main'),
       headers: {
         "Authorization":
-            "Bearer 5zX/2VXijNuKmwQIwaM2mTxLIUcrMw/l8djfBMZyBOklB5bXVUH6+fd+qV8hA0QG0cMfuZKeddg0zztf2o72KCfkU3U+npM8xcBKwFSXdFXMDvzqQ8xx+XlowQzNckqUQMxkR6lKlQFC8h0zoWyg27fNO5ISYaSivgX50BN41eQvK+oAWlAPZM3rNVzNQx+taRev5BBcDBz3+20yQ5Mud5qCzupWAYidFGVVcSxHphsFuvAZI/G9ZTDFSiLUQb64nHfptE07Jrd8cn4XBk5X640s5H4Z1opLpD0Lmb1uVk82DpdKsnkYVSSPadOKH3pKe+haFk6qN3E8FSAGj+Qec9ZRoWnDo4APw5e7x4izcMB8uiISsXh4ZQf/mMHpfJGZ6TjNgTV7xwzd7JPmu6+DWIjRofKY9OErDC9+a3rob3/JEBdkCK9jrZx8k8QJNtNfLhF9xwj1TJMFYnRFAP6yqyvbDvedZLiLUxiwzzY6KXzHREJF24rlWuxrb+WpSwon6x9J2MjSyoIKP+9rNDr/Eg=="
+            "Bearer $API_TOKEN"
       },
     );
     final emailsResponse = await http.get(
       Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.email.getEmails.main?userId=1'),
       headers: {
         "Authorization":
-            "Bearer 5zX/2VXijNuKmwQIwaM2mTxLIUcrMw/l8djfBMZyBOklB5bXVUH6+fd+qV8hA0QG0cMfuZKeddg0zztf2o72KCfkU3U+npM8xcBKwFSXdFXMDvzqQ8xx+XlowQzNckqUQMxkR6lKlQFC8h0zoWyg27fNO5ISYaSivgX50BN41eQvK+oAWlAPZM3rNVzNQx+taRev5BBcDBz3+20yQ5Mud5qCzupWAYidFGVVcSxHphsFuvAZI/G9ZTDFSiLUQb64nHfptE07Jrd8cn4XBk5X640s5H4Z1opLpD0Lmb1uVk82DpdKsnkYVSSPadOKH3pKe+haFk6qN3E8FSAGj+Qec9ZRoWnDo4APw5e7x4izcMB8uiISsXh4ZQf/mMHpfJGZ6TjNgTV7xwzd7JPmu6+DWIjRofKY9OErDC9+a3rob3/JEBdkCK9jrZx8k8QJNtNfLhF9xwj1TJMFYnRFAP6yqyvbDvedZLiLUxiwzzY6KXzHREJF24rlWuxrb+WpSwon6x9J2MjSyoIKP+9rNDr/Eg=="
+        "Bearer $API_TOKEN"
       },
     );
 
@@ -165,55 +167,65 @@ class PromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.lightBlueAccent.withOpacity(0.4),
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                overflow: TextOverflow.visible,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: Text(
-                description,
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailComposeScreen(promptId: promptId)
+          ),
+        );
+      },
+      child: Card(
+        color: Colors.lightBlueAccent.withOpacity(0.4),
+        child: Container(
+          width: 200,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
                 style: const TextStyle(
-                  fontSize: 12,
-                  overflow: TextOverflow.visible,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  overflow: TextOverflow.visible,
                 ),
               ),
-            ),
-            Row(
-              children: const [
-                Icon(
-                  Icons.info_outline,
-                  size: 15,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 2),
-                Text(
-                  "Click to generate",
-                  style: TextStyle(
-                    fontSize: 10,
+              const SizedBox(height: 12),
+              Expanded(
+                child: Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 12,
                     overflow: TextOverflow.visible,
-                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              Row(
+                children: const [
+                  Icon(
+                    Icons.info_outline,
+                    size: 15,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 2),
+                  Text(
+                    "Click to generate",
+                    style: TextStyle(
+                      fontSize: 10,
+                      overflow: TextOverflow.visible,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

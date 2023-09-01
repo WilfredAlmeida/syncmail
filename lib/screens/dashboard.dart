@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -6,15 +8,62 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Map> prompts = [
-    {"promptId": 1, "description": "I need a leave from works", "title": "Job Leave"},
-    {"promptId": 2, "description": "I need a leave from work", "title": "Job Leave"},
-  ];
+  List<Map> prompts = [];
 
-  List<Map> generatedEmails = [
-    {"id": 1, "keywords": "a,b,c", "result": "some result", "subject": "subject"},
-    {"id": 2, "keywords": "a,b,c", "result": "some result", "subject": "subject"}
-  ];
+  List<Map> generatedEmails = [];
+
+  Future<void> fetchData() async {
+    final promptsResponse = await http.get(
+      Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.prompts.getPrompts.main'),
+      headers: {
+        "Authorization":
+            "Bearer 5zX/2VXijNuKmwQIwaM2mTxLIUcrMw/l8djfBMZyBOklB5bXVUH6+fd+qV8hA0QG0cMfuZKeddg0zztf2o72KCfkU3U+npM8xcBKwFSXdFXMDvzqQ8xx+XlowQzNckqUQMxkR6lKlQFC8h0zoWyg27fNO5ISYaSivgX50BN41eQvK+oAWlAPZM3rNVzNQx+taRev5BBcDBz3+20yQ5Mud5qCzupWAYidFGVVcSxHphsFuvAZI/G9ZTDFSiLUQb64nHfptE07Jrd8cn4XBk5X640s5H4Z1opLpD0Lmb1uVk82DpdKsnkYVSSPadOKH3pKe+haFk6qN3E8FSAGj+Qec9ZRoWnDo4APw5e7x4izcMB8uiISsXh4ZQf/mMHpfJGZ6TjNgTV7xwzd7JPmu6+DWIjRofKY9OErDC9+a3rob3/JEBdkCK9jrZx8k8QJNtNfLhF9xwj1TJMFYnRFAP6yqyvbDvedZLiLUxiwzzY6KXzHREJF24rlWuxrb+WpSwon6x9J2MjSyoIKP+9rNDr/Eg=="
+      },
+    );
+    final emailsResponse = await http.get(
+      Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.email.getEmails.main?userId=1'),
+      headers: {
+        "Authorization":
+            "Bearer 5zX/2VXijNuKmwQIwaM2mTxLIUcrMw/l8djfBMZyBOklB5bXVUH6+fd+qV8hA0QG0cMfuZKeddg0zztf2o72KCfkU3U+npM8xcBKwFSXdFXMDvzqQ8xx+XlowQzNckqUQMxkR6lKlQFC8h0zoWyg27fNO5ISYaSivgX50BN41eQvK+oAWlAPZM3rNVzNQx+taRev5BBcDBz3+20yQ5Mud5qCzupWAYidFGVVcSxHphsFuvAZI/G9ZTDFSiLUQb64nHfptE07Jrd8cn4XBk5X640s5H4Z1opLpD0Lmb1uVk82DpdKsnkYVSSPadOKH3pKe+haFk6qN3E8FSAGj+Qec9ZRoWnDo4APw5e7x4izcMB8uiISsXh4ZQf/mMHpfJGZ6TjNgTV7xwzd7JPmu6+DWIjRofKY9OErDC9+a3rob3/JEBdkCK9jrZx8k8QJNtNfLhF9xwj1TJMFYnRFAP6yqyvbDvedZLiLUxiwzzY6KXzHREJF24rlWuxrb+WpSwon6x9J2MjSyoIKP+9rNDr/Eg=="
+      },
+    );
+
+    if (promptsResponse.statusCode == 200 && emailsResponse.statusCode == 200) {
+      final promptsData = jsonDecode(promptsResponse.body);
+      final emailsData = jsonDecode(emailsResponse.body);
+
+      setState(() {
+        if (promptsData.containsKey("prompts")) {
+          List<dynamic> promptList = promptsData["prompts"];
+          for (var promptData in promptList) {
+            if (promptData is Map<String, dynamic>) {
+              prompts.add(promptData);
+            }
+          }
+        }
+
+        if (emailsData.containsKey("emails")) {
+          List<dynamic> emailsList = emailsData["emails"];
+          for (var emailData in emailsList) {
+            if (emailData is Map<String, dynamic>) {
+              generatedEmails.add(emailData);
+            }
+          }
+        }
+      });
+
+      return;
+    } else {
+      throw Exception('Failed to load data from the API');
+    }
+  }
+
+  @override
+  void initState() {
+    Future.wait([fetchData()]);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

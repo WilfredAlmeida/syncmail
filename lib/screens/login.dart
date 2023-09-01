@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncloop/screens/signup.dart';
 
 import '../utils/utils.dart';
 import 'dashboard.dart';
@@ -117,8 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   if (responseParsed.containsKey("id")) {
                                     print(responseParsed["id"]);
+
+                                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    prefs.setInt("userId", responseParsed["keys"][0]);
+
                                     setState(() {
-                                      _isLoading = true;
+                                      _isLoading = false;
                                     });
                                     Navigator.pushReplacement(
                                       context,
@@ -167,6 +173,42 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+          Positioned(
+            bottom: 40,
+            left: 100,
+            right: 100,
+            child: SizedBox(
+              width: 100,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 25,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignUpScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Sign Up",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0057FF),
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

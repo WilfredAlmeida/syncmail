@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncloop/screens/emailCompose.dart';
 import 'package:syncloop/screens/emailDetails.dart';
 import 'package:syncloop/utils/utils.dart';
@@ -18,17 +19,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> fetchData() async {
     final promptsResponse = await http.get(
       Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.prompts.getPrompts.main'),
-      headers: {
-        "Authorization":
-            "Bearer $API_TOKEN"
-      },
+      headers: {"Authorization": "Bearer $API_TOKEN"},
     );
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+
     final emailsResponse = await http.get(
-      Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.email.getEmails.main?userId=1'),
-      headers: {
-        "Authorization":
-        "Bearer $API_TOKEN"
-      },
+      Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.email.getEmails.main?userId=${userId!}'),
+      headers: {"Authorization": "Bearer $API_TOKEN"},
     );
 
     if (promptsResponse.statusCode == 200 && emailsResponse.statusCode == 200) {
@@ -168,12 +167,10 @@ class PromptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => EmailComposeScreen(promptId: promptId)
-          ),
+          MaterialPageRoute(builder: (context) => EmailComposeScreen(promptId: promptId)),
         );
       },
       child: Card(

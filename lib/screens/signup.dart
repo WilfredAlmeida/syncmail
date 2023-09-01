@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncloop/screens/login.dart';
+import '../utils/utils.dart';
 import 'dashboard.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,6 +15,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  var _isLoading = false;
 
   String? _validateName(String? value) {
     if (value!.isEmpty) {
@@ -118,41 +124,120 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       validator: _validateEmail, // Email validation
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DashboardScreen(),
+                    _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                var headers = {'Content-Type': 'application/json', 'Authorization': "Bearer $API_TOKEN"};
+
+                                var request = http.Request('POST', Uri.parse('https://cloud.syncloop.com/tenant/1692080445861/packages.chaturMail.user.createUser.main'));
+                                request.body = json.encode({"email": _emailController.text, "name": _nameController.text});
+                                request.headers.addAll(headers);
+
+                                http.StreamedResponse response = await request.send();
+
+                                if (response.statusCode == 200) {
+                                  final responseRaw = await response.stream.bytesToString();
+                                  print(responseRaw);
+                                  final responseParsed = jsonDecode(responseRaw);
+
+                                  if (responseParsed.containsKey("keys")) {
+                                    print(responseParsed["keys"]);
+
+                                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    prefs.setInt("userId", responseParsed["keys"][0]);
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DashboardScreen(),
+                                      ),
+                                    );
+                                  } else {
+                                    print("Signup Failed");
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('User not found'),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  print(response.reasonPhrase);
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 15,
+                                horizontal: 30,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 30,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0057FF),
-                        ),
-                      ),
-                    ),
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0057FF),
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),
             ),
           ),
+          Positioned(
+            bottom: 40,
+            left: 100,
+            right: 100,
+            child: SizedBox(
+              width: 100,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 25,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Login",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0057FF),
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

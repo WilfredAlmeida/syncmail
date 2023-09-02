@@ -54,3 +54,23 @@ The package is named as `chaturmail` in Syncloop dashboard.
 - `/middleware/pub/client/http/request`: To make HTTP request to Google Palm and Vercel DB APIs.
 
 ### API Screenshots
+
+<details>  
+  <summary> API Screenshots</summary>  
+
+  
+1. Generate Email `/chaturMail/email/generateEmail`  
+   <img width="760" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/cb51283d-7899-4dc7-ae8b-08cc376436b2">  
+2. Get generated emails `/chaturMail/email/getEmails`  
+   <img width="776" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/d2b90293-6352-42dc-85d7-e5b7d05b5de9">  
+3. Get cached prompts from Redis `/chaturMail/prompts/getCachedPrompts`  
+   <img width="750" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/f44f81b9-e1f6-4841-91b1-7f9287ec97b5">  
+4. Get all prompts `/chaturMail/prompts/getPrompts`  
+   <img width="761" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/1295312f-6576-48d0-8b6d-30d711834ab1">  
+5. Create user while signup `/chaturMail/user/createUser`  
+   <img width="753" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/5c2603fa-43e0-4325-9066-96ee901e2fad">  
+6. Login user `/chaturMail/user/login`  
+   <img width="759" alt="image" src="https://github.com/WilfredAlmeida/syncmail/assets/60785452/0ead78f7-47d1-4334-abdc-79dc9075b6f7">  
+
+
+</details>

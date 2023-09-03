@@ -5,6 +5,17 @@ SyncMail is an AI email generator that generates email based on subject and keyw
 SyncMail's backend APIs are built using [SyncLoop](https://syncloop.com) and it uses Planetscale MySQL as a primary database and Vercel KV Redis database for caching.
 
 ## Demo
+<details><summary>GIF</summary>  
+  
+![syncmailDemo](https://github.com/WilfredAlmeida/syncmail/assets/60785452/3c8fb5ab-1ee9-4b77-b92c-253acd90de98)  
+
+</details>  
+
+
+<details><summary>Detailed Video</summary>
+https://youtu.be/hkgr-FWvJqo
+</details>  
+
 
 ### The app has the following features
 - User Signup and Login

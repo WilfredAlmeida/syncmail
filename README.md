@@ -16,6 +16,19 @@ SyncMail's backend APIs are built using [SyncLoop](https://syncloop.com) and it 
 https://youtu.be/hkgr-FWvJqo
 </details>  
 
+<details>
+  <summary>App Screenhots</summary>  
+
+![image](https://github.com/WilfredAlmeida/syncmail/assets/60785452/ad6164bb-3189-48a8-8a0f-912f015b57ae)  
+
+![image](https://github.com/WilfredAlmeida/syncmail/assets/60785452/e9d89472-25b1-4cf6-99be-142044e27f85)  
+
+![image](https://github.com/WilfredAlmeida/syncmail/assets/60785452/1b295da5-6202-4af5-9e80-f8260316fd77)  
+
+![image](https://github.com/WilfredAlmeida/syncmail/assets/60785452/a02e1419-8358-496e-a85f-38ef1b6842de)  
+  
+</details>
+
 
 ### The app has the following features
 - User Signup and Login

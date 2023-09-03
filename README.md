@@ -27,7 +27,8 @@ Tech Used:
 
 
 ## Syncloop Services and APIs
-The package is named as `chaturmail` in Syncloop dashboard.
+The package is named as `chaturmail` in Syncloop dashboard. Here's the exported package [1693724579810.zip](https://github.com/WilfredAlmeida/syncmail/files/12505337/1693724579810.zip)
+
 
 **Adapters**
 - `/chaturMail/adapter/connection/mydb`: Connection to the MySQL database
